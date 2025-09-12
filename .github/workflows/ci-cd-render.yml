@@ -55,17 +55,5 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Setup Node
-              uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-
-            - name: Install Render CLI via install script
-              run: |
-                  curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
-                  sudo mv render /usr/local/bin/
-
-            - name: Trigger Render Deploy
-              env:
-                  RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-              run: render deploys create ${{ secrets.RENDER_SERVICE_ID }} --confirm --wait
+            - name: Deploy to Render
+              run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
