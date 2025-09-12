@@ -55,16 +55,14 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
-            - name: Download dist artifact
-              uses: actions/download-artifact@v4
+            - name: Setup Node
+              uses: actions/setup-node@v4
               with:
-                  name: dist
-                  path: dist/
+                  node-version: '20'
 
-            - name: Install Render CLI
+            - name: Install Render CLI via install script
               run: |
-                  curl -sSL https://github.com/render-oss/cli/releases/download/v1.1.0/cli_1.1.0_linux_amd64.tar.gz -o render.tar.gz
-                  tar -xzf render.tar.gz
+                  curl -fsSL https://raw.githubusercontent.com/render-oss/cli/refs/heads/main/bin/install.sh | sh
                   sudo mv render /usr/local/bin/
 
             - name: Trigger Render Deploy
