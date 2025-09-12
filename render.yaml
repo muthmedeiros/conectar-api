@@ -1,0 +1,24 @@
+services:
+  - type: web
+    runtime: node
+    name: conectar-api
+    plan: free
+    region: virginia
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20
+      - key: DB_TYPE
+        value: sqlite
+      - key: DB_NAME
+        value: conectar.db
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 3600s
+      - key: JWT_REFRESH_SECRET
+        sync: false
