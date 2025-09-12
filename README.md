@@ -131,7 +131,7 @@ src/
 
 1. Crie um **Web Service** no [Render](https://render.com/).  
    - Runtime: Node  
-   - Build Command: `npm ci && npm run build`  
+   - Build Command: `npm ci && npm run build:ci`  
    - Start Command: `npm run start:prod`  
    - Configure as variáveis de ambiente conforme o `.example.env`.
 
