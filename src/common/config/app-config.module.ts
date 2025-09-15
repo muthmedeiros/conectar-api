@@ -7,7 +7,9 @@ import Joi from 'joi';
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
-            envFilePath: ['.env', '.env.local'],
+            envFilePath: process.env.NODE_ENV === 'test'
+                ? ['.env.test', '.env', '.env.local']
+                : ['.env', '.env.local'],
             validationSchema: Joi.object({
                 PORT: Joi.number().default(3000),
                 NODE_ENV: Joi.string().valid('development', 'production', 'test').default('development'),

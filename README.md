@@ -36,6 +36,15 @@ npm -v
 
 Clone o repositório e instale as dependências:
 
+---
+
+## 🧪 Testes e2e e ambiente
+
+Para rodar os testes e2e, é necessário um arquivo `.env.test` na raiz do projeto com as variáveis obrigatórias:
+
+O projeto carrega automaticamente `.env.test` quando `NODE_ENV=test` (ex: ao rodar `npm run test:e2e`).
+Veja o exemplo em `.env.test` já incluído no repositório.
+
 ```bash
 git clone https://github.com/muthmedeiros/conectar-api.git
 cd conectar-api
