@@ -2,8 +2,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { CreateUserRequestDto } from './dtos/create-user.request.dto';
-import { CreateUserResponseDto } from './dtos/create-user.response.dto';
+import { CreateUserAuthRequestDto } from './dtos/create-user-auth.request.dto';
+import { CreateUserAuthResponseDto } from './dtos/create-user-auth.response.dto';
 import { LoginUserRequestDto } from './dtos/login-user.request.dto';
 import { LoginUserResponseDto } from './dtos/login-user.response.dto';
 import { CreateUserMapper } from './mappers/create-user.mapper';
@@ -16,11 +16,11 @@ export class AuthController {
 
     @Post('register')
     @ApiOperation({ summary: 'Register a new user', description: 'Accessible publicly, creates a new account.' })
-    @ApiBody({ type: CreateUserRequestDto })
-    @ApiResponse({ status: 201, type: CreateUserResponseDto })
+    @ApiBody({ type: CreateUserAuthRequestDto })
+    @ApiResponse({ status: 201, type: CreateUserAuthResponseDto })
     @ApiResponse({ status: 409, description: 'Email already in use' })
     @ApiResponse({ status: 400, description: 'Validation failed' })
-    async register(@Body() dto: CreateUserRequestDto): Promise<CreateUserResponseDto> {
+    async register(@Body() dto: CreateUserAuthRequestDto): Promise<CreateUserAuthResponseDto> {
         const requestCmd = CreateUserMapper.fromDto(dto);
 
         const createdUser = await this.authService.register(requestCmd);

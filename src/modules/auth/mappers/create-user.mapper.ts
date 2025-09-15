@@ -1,11 +1,11 @@
 import { plainToInstance } from 'class-transformer';
 import { User } from '../../users/domain/user.model';
-import { CreateUserCommand } from '../commands/create-user.command';
-import { CreateUserRequestDto } from '../dtos/create-user.request.dto';
-import { CreateUserResponseDto } from '../dtos/create-user.response.dto';
+import { CreateUserAuthCommand } from '../commands/create-user-auth.command';
+import { CreateUserAuthRequestDto } from '../dtos/create-user-auth.request.dto';
+import { CreateUserAuthResponseDto } from '../dtos/create-user-auth.response.dto';
 
 export class CreateUserMapper {
-    static fromDto(dto: CreateUserRequestDto): CreateUserCommand {
+    static fromDto(dto: CreateUserAuthRequestDto): CreateUserAuthCommand {
         return {
             name: dto.name,
             email: dto.email,
@@ -14,9 +14,9 @@ export class CreateUserMapper {
         };
     }
 
-    static toResponse(user: User): CreateUserResponseDto {
+    static toResponse(user: User): CreateUserAuthResponseDto {
         return plainToInstance(
-            CreateUserResponseDto,
+            CreateUserAuthResponseDto,
             user,
             { excludeExtraneousValues: true },
         );

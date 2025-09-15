@@ -8,8 +8,7 @@ import { UserRole } from '../../enums/user-role.enum';
 @Injectable()
 export class AdminSeed implements OnApplicationBootstrap {
     constructor(
-        @InjectRepository(UserEntity)
-        private readonly repo: Repository<UserEntity>,
+        @InjectRepository(UserEntity) private readonly repo: Repository<UserEntity>,
     ) { }
 
     async onApplicationBootstrap() {

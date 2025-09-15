@@ -1,7 +1,7 @@
 # Conéctar API
 
 API desenvolvida em **NestJS** com banco **SQLite**, como parte do desafio técnico Fullstack.  
-Implementa autenticação com JWT, gerenciamento de usuários e documentação automática com Swagger.
+Implementa autenticação com JWT, gerenciamento completo de usuários com CRUD, controle de acesso baseado em papéis (RBAC), documentação automática com Swagger e **cobertura completa de testes**.
 
 ---
 
@@ -13,6 +13,8 @@ Implementa autenticação com JWT, gerenciamento de usuários e documentação a
 - [JWT](https://jwt.io/)
 - [Swagger](https://swagger.io/) (auto-docs)
 - [Jest](https://jestjs.io/) (testes unitários e e2e)
+- [bcrypt](https://www.npmjs.com/package/bcrypt) (hash de senhas)
+- [class-validator](https://github.com/typestack/class-validator) (validação de DTOs)
 
 ---
 
@@ -52,7 +54,29 @@ Basta copiá-lo e preencher com os valores adequados:
 cp .example.env .env
 ```
 
-> ℹ️ Foi criado um **seed para o primeiro usuário admin**, que é executado automaticamente quando a aplicação inicia em ambiente não-produtivo.
+### 👤 Admin Seed (Usuário Padrão)
+
+Foi criado um **seed para o primeiro usuário admin**, que é executado automaticamente conforme o ambiente:
+
+- **Desenvolvimento**: ✅ Admin seed é criado automaticamente
+  - Email: `admin@conectar.com`
+  - Senha: `admin123`
+  - Papel: `ADMIN`
+
+- **Produção**: ❌ Admin seed é **desabilitado** por segurança
+
+- **Teste**: ❌ Admin seed é **desabilitado** para isolamento dos testes
+
+```typescript
+// Configuração condicional no AuthModule
+providers: [
+  AuthService,
+  JwtStrategy,
+  ...(process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test' ? [AdminSeed] : []),
+]
+```
+
+> ⚠️ **Importante**: Em produção, você deve criar o primeiro admin manualmente através do endpoint `/auth/register` ou diretamente no banco de dados.
 
 ---
 
@@ -83,33 +107,117 @@ Acesse:
 
 Lá você encontra todos os endpoints, exemplos de requests e responses, além dos schemas de DTO.
 
+### 🔐 Endpoints Principais
+
+#### Auth (Públicos)
+- `POST /api/auth/register` - Registro de novos usuários
+- `POST /api/auth/login` - Login e obtenção de tokens JWT
+
+#### Users (Autenticados)
+- `GET /api/users` - Listar usuários com filtros e paginação (Admin apenas)
+- `GET /api/users/:id` - Buscar usuário por ID (Admin: qualquer usuário, User: apenas próprio)
+- `POST /api/users` - Criar novo usuário (Admin apenas)
+- `PUT /api/users/:id` - Atualizar usuário (Admin: qualquer usuário, User: apenas próprio)
+- `DELETE /api/users/:id` - Deletar usuário (Admin apenas)
+
+#### Filtros Disponíveis (GET /users)
+- `role` - Filtrar por papel (admin/user)
+- `search` - Buscar por nome ou email (correspondência parcial)
+- `orderBy` - Ordenar por campo (name/createdAt)
+- `order` - Direção da ordenação (ASC/DESC)
+- `page` - Número da página (baseado em 1)
+- `limit` - Itens por página (máx 100)
+
 ---
 
 ## 🧪 Testes
 
-O projeto usa Jest para testes unitários e e2e.
+O projeto possui **cobertura completa de testes** com Jest, incluindo testes unitários, de integração e e2e (end-to-end).
 
-### Rodar todos os testes
+### 📊 Cobertura Atual
+- **Testes Unitários**: 62 testes passando
+- **Testes E2E**: 39 testes passando
+- **Módulos Testados**: Auth, Users (completos)
+- **Cobertura**: Serviços, Controllers, Mappers, Guards, Pipes
+
+### 🔧 Scripts de Teste Disponíveis
+
+#### Testes Principais
 ```bash
+# Todos os testes unitários
 npm test
-```
 
-### Rodar em watch mode
-```bash
-npm run test:watch
-```
+# Apenas testes unitários (excluindo e2e)
+npm run test:unit
 
-### Testes de integração (e2e)
-```bash
+# Todos os testes e2e (com ambiente isolado)
 npm run test:e2e
+
+# Executar todos os testes (unitários + e2e)
+npm run test:all
 ```
 
-### Cobertura de testes
+#### Testes em Modo Watch
 ```bash
+# Watch mode para unitários
+npm run test:watch
+
+# Watch mode para e2e
+npm run test:e2e:watch
+```
+
+#### Análise de Cobertura
+```bash
+# Gerar relatório de cobertura
 npm run test:cov
 ```
 
 Um relatório HTML será gerado em `coverage/lcov-report/index.html`.
+
+### ⚙️ Configuração de Ambiente para Testes
+
+O projeto utiliza diferentes configurações para cada ambiente:
+
+- **Desenvolvimento**: Admin seed é criado automaticamente
+- **Produção**: Admin seed é desabilitado
+- **Teste**: Admin seed é desabilitado + banco isolado
+
+```typescript
+// Configuração no AuthModule
+...(process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test' ? [AdminSeed] : [])
+```
+
+### 🧪 Estrutura de Testes
+
+```
+src/modules/
+  auth/__tests__/           # Testes do módulo de autenticação
+    auth.controller.spec.ts # Controller com guards e validações
+    auth.service.spec.ts    # Service com lógica de negócio
+    strategies/             # Estratégias JWT
+    mappers/               # Transformação de dados
+  users/__tests__/          # Testes do módulo de usuários
+    users.controller.spec.ts # CRUD + permissões + validações
+    users.service.spec.ts   # CRUD + filtros + paginação
+    mappers/               # Create, Update, Get mappers
+test/                      # Testes e2e (integração completa)
+  auth.e2e-spec.ts        # Fluxos de registro e login
+  users.e2e-spec.ts       # CRUD completo + autenticação
+```
+
+### 🔐 Características dos Testes
+
+#### Testes Unitários
+- **Mocking completo**: Repositórios, serviços e dependências mockados
+- **Isolamento**: Cada teste é independente
+- **Cobertura**: Todos os cenários (sucesso, erro, edge cases)
+- **Validação**: DTOs, guards, pipes, mappers
+
+#### Testes E2E
+- **Banco real**: SQLite em memória para isolamento
+- **Autenticação completa**: JWT tokens, guards, roles
+- **Validação de API**: Status codes, response bodies, headers
+- **Cenários reais**: Fluxos completos de usuário
 
 ---
 
@@ -118,12 +226,39 @@ Um relatório HTML será gerado em `coverage/lcov-report/index.html`.
 ```
 src/
   common/         # código compartilhado (guards, pipes, filters, config, etc.)
+    guards/       # guards de autenticação e autorização
+    pipes/        # pipes de validação (UUID, roles, etc.)
+    config/       # configurações (DB, JWT, etc.)
   modules/        # módulos de domínio (auth, users, etc.)
     auth/         # autenticação e registro de usuários
-    users/        # gestão de usuários
+    users/        # gestão completa de usuários (CRUD)
   main.ts         # bootstrap da aplicação
   app.module.ts   # módulo raiz
 ```
+
+### 🔒 Sistema de Permissões
+
+- **Admin**: Acesso total a todos os endpoints de usuários
+- **User**: Pode apenas visualizar e editar seus próprios dados
+- **Usuários não autenticados**: Acesso apenas aos endpoints de auth (register/login)
+
+### 🗃️ Funcionalidades dos Usuários
+
+- **CRUD Completo**: Criar, listar, visualizar, atualizar e deletar usuários
+- **Filtros Avançados**: Por papel, busca textual, ordenação personalizada
+- **Paginação**: Controle de performance para listas grandes
+- **Validações**: UUID format, dados obrigatórios, tipos corretos
+- **Segurança**: Controle de acesso baseado em papéis (RBAC)
+- **Testes Completos**: 100% de cobertura em testes unitários e e2e
+
+### 🔧 Arquitetura de Qualidade
+
+- **Domain-Driven Design**: Separação clara entre DTOs, Commands, Domain Models
+- **Mappers Pattern**: Transformação segura de dados entre camadas
+- **Guard System**: Autenticação JWT + autorização baseada em papéis
+- **Validation Pipes**: Validação automática de entrada com class-validator
+- **Error Handling**: Tratamento consistente de erros com filtros globais
+- **Swagger Integration**: Documentação automática e interativa
 
 ---
 

@@ -1,9 +1,9 @@
-import { CreateUserRequestDto } from "../../dtos/create-user.request.dto";
+import { CreateUserAuthRequestDto } from "../../dtos/create-user-auth.request.dto";
 import { CreateUserMapper } from "../../mappers/create-user.mapper";
 
 describe('CreateUserMapper', () => {
     it('fromDto should map correctly', () => {
-        const dto = { name: 'a', email: 'b', password: 'c', role: 'user' } as CreateUserRequestDto;
+        const dto = { name: 'a', email: 'b', password: 'c', role: 'user' } as CreateUserAuthRequestDto;
         const cmd = CreateUserMapper.fromDto(dto);
         expect(cmd.rawPassword).toBe('c');
     });

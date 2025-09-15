@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/domain/user.model';
 import { UserEntity } from '../users/entities/user.entity';
 import { UserMapper } from '../users/mappers/user.mapper';
-import { CreateUserCommand } from './commands/create-user.command';
+import { CreateUserCommand } from './commands/create-user-auth.command';
 import { AuthTokens } from './interfaces/auth-tokens.interface';
 
 @Injectable()

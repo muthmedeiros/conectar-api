@@ -1,8 +1,8 @@
 {
   "name": "conectar-api",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "version": "1.0.0",
+  "description": "NestJS API with JWT authentication, comprehensive CRUD operations, role-based access control, and complete test coverage",
+  "author": "Murilo Medeiros",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -18,7 +18,10 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "test:e2e:watch": "NODE_ENV=test jest --config ./test/jest-e2e.json --watch",
+    "test:unit": "jest --testPathIgnorePatterns=e2e",
+    "test:all": "npm run test:unit && npm run test:e2e"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

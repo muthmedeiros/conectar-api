@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Expose } from "class-transformer";
-import { UserRole } from "src/common/enums/user-role.enum";
-import { User } from "src/modules/users/domain/user.model";
+import { UserRole } from '../../../common/enums/user-role.enum';
+import { User } from "../../users/domain/user.model";
 
-export class CreateUserResponseDto implements User {
+export class CreateUserAuthResponseDto implements User {
     @ApiProperty()
     @Expose()
     readonly id: string;
