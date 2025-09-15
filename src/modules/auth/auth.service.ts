@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 import { User } from '../users/domain/user.model';
 import { UserEntity } from '../users/entities/user.entity';
 import { UserMapper } from '../users/mappers/user.mapper';
-import { CreateUserCommand } from './commands/create-user-auth.command';
+import { CreateUserAuthCommand } from './commands/create-user-auth.command';
 import { AuthTokens } from './interfaces/auth-tokens.interface';
 
 @Injectable()
@@ -19,7 +19,7 @@ export class AuthService {
         private readonly config: ConfigService,
     ) { }
 
-    async register(cmd: CreateUserCommand): Promise<User> {
+    async register(cmd: CreateUserAuthCommand): Promise<User> {
         const exists = await this.userRepository.exists({ where: { email: cmd.email } });
         if (exists) throw new ConflictException('Email already in use');
 
