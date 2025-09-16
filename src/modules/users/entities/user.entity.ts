@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserRole } from '../../../common/enums/user-role.enum';
 
 @Entity('users')
@@ -17,6 +17,9 @@ export class UserEntity {
 
     @Column({ type: 'text' })
     role: UserRole;
+
+    @ManyToMany('ClientEntity', 'users')
+    clients: any[];
 
     @CreateDateColumn()
     createdAt: Date;

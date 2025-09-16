@@ -10,10 +10,12 @@ import { UserRole } from '../src/common/enums/user-role.enum';
 import { CreateUserRequestDto } from '../src/modules/users/dtos/create-user.request.dto';
 import { UpdateUserRequestDto } from '../src/modules/users/dtos/update-user.request.dto';
 import { UserEntity } from '../src/modules/users/entities/user.entity';
+import { ClientEntity } from '../src/modules/clients/entities/client.entity';
 
 describe('Users (e2e)', () => {
     let app: INestApplication;
     let userRepository: Repository<UserEntity>;
+    let clientRepository: Repository<ClientEntity>;
     let jwtService: JwtService;
 
     let adminUser: UserEntity;
@@ -27,19 +29,29 @@ describe('Users (e2e)', () => {
         }).compile();
 
         app = moduleFixture.createNestApplication();
-        app.useGlobalPipes(new ValidationPipe({
-            whitelist: true,
-            transform: true,
-        }));
+        app.useGlobalPipes(
+            new ValidationPipe({
+                whitelist: true,
+                forbidNonWhitelisted: true,
+                transform: true,
+            }),
+        );
 
-        userRepository = moduleFixture.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+        userRepository = moduleFixture.get<Repository<UserEntity>>(
+            getRepositoryToken(UserEntity),
+        );
+        clientRepository = moduleFixture.get<Repository<ClientEntity>>(
+            getRepositoryToken(ClientEntity),
+        );
         jwtService = moduleFixture.get<JwtService>(JwtService);
 
         await app.init();
     });
 
     beforeEach(async () => {
-        // Clean database
+        // Clear all data, respecting foreign key constraints
+        await userRepository.query('DELETE FROM client_users');
+        await clientRepository.clear();
         await userRepository.clear();
 
         // Create admin user
@@ -77,6 +89,9 @@ describe('Users (e2e)', () => {
     });
 
     afterAll(async () => {
+        // Clear all data, respecting foreign key constraints
+        await userRepository.query('DELETE FROM client_users');
+        await clientRepository.clear();
         await userRepository.clear();
         await app.close();
     });
