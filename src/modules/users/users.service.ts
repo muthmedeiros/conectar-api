@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as crypto from 'bcrypt';
+import { EncryptionUtil } from 'src/common/utils/encryption.util';
 import { Repository } from 'typeorm';
 import { CreateUserCommand } from './commands/create-user.command';
 import { UpdateUserCommand } from './commands/update-user.command';
@@ -19,7 +19,7 @@ export class UsersService {
         const exists = await this.userRepository.exists({ where: { email: cmd.email } });
         if (exists) throw new ConflictException('Email already in use');
 
-        const passwordHash = await crypto.hash(cmd.rawPassword, 12);
+        const passwordHash = await EncryptionUtil.hashPassword(cmd.rawPassword);
 
         const userEntity = this.userRepository.create({
             name: cmd.name,
@@ -89,7 +89,7 @@ export class UsersService {
         if (cmd.email !== undefined) user.email = cmd.email;
         if (cmd.role !== undefined) user.role = cmd.role;
         if (cmd.rawPassword !== undefined) {
-            user.passwordHash = await crypto.hash(cmd.rawPassword, 12);
+            user.passwordHash = await EncryptionUtil.hashPassword(cmd.rawPassword);
         }
 
         const updatedUser = await this.userRepository.save(user);

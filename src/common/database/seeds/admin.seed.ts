@@ -1,9 +1,9 @@
 import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../../modules/users/entities/user.entity';
 import { UserRole } from '../../enums/user-role.enum';
+import { EncryptionUtil } from '../../utils/encryption.util';
 
 @Injectable()
 export class AdminSeed implements OnApplicationBootstrap {
@@ -14,7 +14,7 @@ export class AdminSeed implements OnApplicationBootstrap {
     async onApplicationBootstrap() {
         const adminExists = await this.repo.findOne({ where: { role: UserRole.ADMIN } });
         if (!adminExists) {
-            const passwordHash = await bcrypt.hash('admin123', 12);
+            const passwordHash = await EncryptionUtil.hashPassword('admin123');
             const admin = this.repo.create({
                 name: 'Super Admin',
                 email: 'admin@conectar.com',

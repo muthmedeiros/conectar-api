@@ -27,6 +27,7 @@ describe('ClientsController', () => {
         name: 'Admin User',
         email: 'admin@test.com',
         role: UserRole.ADMIN,
+        lastLogin: new Date(),
         createdAt: new Date(),
         updatedAt: new Date(),
     };
@@ -38,6 +39,10 @@ describe('ClientsController', () => {
                 {
                     provide: ClientsService,
                     useValue: mockClientsService,
+                },
+                {
+                    provide: require('../../users/users.service').UsersService,
+                    useValue: {},
                 },
             ],
         }).compile();

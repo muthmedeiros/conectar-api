@@ -3,7 +3,7 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as crypto from 'bcrypt';
+import { EncryptionUtil } from 'src/common/utils/encryption.util';
 import { Repository } from 'typeorm';
 import { User } from '../users/domain/user.model';
 import { UserEntity } from '../users/entities/user.entity';
@@ -23,7 +23,7 @@ export class AuthService {
         const exists = await this.userRepository.exists({ where: { email: cmd.email } });
         if (exists) throw new ConflictException('Email already in use');
 
-        const passwordHash = await crypto.hash(cmd.rawPassword, 12);
+        const passwordHash = await EncryptionUtil.hashPassword(cmd.rawPassword);
 
         const userEntity = this.userRepository.create({
             name: cmd.name,
@@ -40,7 +40,7 @@ export class AuthService {
         const user = await this.userRepository.findOne({ where: { email } });
         if (!user) throw new UnauthorizedException('Invalid credentials');
 
-        const passwordMatches = await crypto.compare(rawPassword, user.passwordHash);
+        const passwordMatches = await EncryptionUtil.comparePassword(rawPassword, user.passwordHash);
         if (!passwordMatches) throw new UnauthorizedException('Invalid credentials');
 
         const payload = {

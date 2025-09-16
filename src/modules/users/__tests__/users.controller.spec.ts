@@ -30,6 +30,7 @@ describe('UsersController', () => {
         name: 'John Doe',
         email: 'john.doe@example.com',
         role: UserRole.USER,
+        lastLogin: new Date('2023-01-01'),
         createdAt: new Date('2023-01-01'),
         updatedAt: new Date('2023-01-01'),
     };
@@ -118,7 +119,7 @@ describe('UsersController', () => {
         it('should get user by id successfully for admin', async () => {
             const userId = 'user-id-123';
             const adminRequest = { user: { ...mockAuthUser, role: UserRole.ADMIN } };
-            
+
             const expectedResponse: GetUserResponseDto = {
                 id: 'user-id-123',
                 name: 'John Doe',
@@ -139,7 +140,7 @@ describe('UsersController', () => {
         it('should allow user to get their own data', async () => {
             const userId = 'current-user-id';
             const userRequest = { user: mockAuthUser };
-            
+
             const expectedResponse: GetUserResponseDto = {
                 id: 'current-user-id',
                 name: 'Current User',
@@ -197,6 +198,7 @@ describe('UsersController', () => {
                         name: 'John Doe',
                         email: 'john.doe@example.com',
                         role: UserRole.USER,
+                        lastLogin: new Date('2023-01-01'),
                         createdAt: new Date('2023-01-01'),
                         updatedAt: new Date('2023-01-01'),
                     },
@@ -339,21 +341,24 @@ describe('UsersController', () => {
     describe('remove', () => {
         it('should delete user successfully', async () => {
             const userId = 'user-id-123';
-
             mockUsersService.remove.mockResolvedValue(undefined);
-
-            await controller.remove(userId);
-
+            const req = { user: { id: 'another-user-id' } };
+            await controller.remove(userId, req);
             expect(service.remove).toHaveBeenCalledWith(userId);
         });
 
         it('should throw NotFoundException for non-existent user', async () => {
             const userId = 'non-existent-id';
-
             mockUsersService.remove.mockRejectedValue(new NotFoundException('User not found'));
-
-            await expect(controller.remove(userId)).rejects.toThrow(NotFoundException);
+            const req = { user: { id: 'another-user-id' } };
+            await expect(controller.remove(userId, req)).rejects.toThrow(NotFoundException);
             expect(service.remove).toHaveBeenCalledWith(userId);
+        });
+
+        it('should throw ForbiddenException when trying to delete own user', async () => {
+            const userId = 'user-id-123';
+            const req = { user: { id: userId } };
+            await expect(controller.remove(userId, req)).rejects.toThrow(ForbiddenException);
         });
     });
 
