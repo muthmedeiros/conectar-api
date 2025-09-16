@@ -20,6 +20,10 @@ export class CreateUserAuthResponseDto implements User {
     @Expose()
     readonly role: UserRole;
 
+    @ApiProperty({ type: Date, nullable: true })
+    @Expose()
+    readonly lastLogin: Date | null;
+
     @ApiProperty()
     @Expose()
     readonly createdAt: Date;

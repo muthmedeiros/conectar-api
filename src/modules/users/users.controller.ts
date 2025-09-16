@@ -132,7 +132,11 @@ export class UsersController {
     @ApiResponse({ status: 404, description: 'User not found' })
     @ApiResponse({ status: 401, description: 'Unauthorized' })
     @ApiResponse({ status: 403, description: 'Forbidden - Admin role required' })
-    async remove(@Param('id', UuidValidationPipe) id: string): Promise<void> {
+    async remove(@Param('id', UuidValidationPipe) id: string, @Request() req: any): Promise<void> {
+        if (req.user.id === id) {
+            throw new ForbiddenException('You cannot delete your own user account');
+        }
+
         await this.usersService.remove(id);
     }
 }

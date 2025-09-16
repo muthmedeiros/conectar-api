@@ -19,6 +19,10 @@ export class GetUsersResponseDto {
     @Expose()
     role: UserRole;
 
+    @ApiProperty({ nullable: true })
+    @Expose()
+    lastLogin: Date | null;
+
     @ApiProperty()
     @Expose()
     createdAt: Date;

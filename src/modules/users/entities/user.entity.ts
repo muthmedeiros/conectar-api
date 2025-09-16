@@ -18,6 +18,9 @@ export class UserEntity {
     @Column({ type: 'text' })
     role: UserRole;
 
+    @Column({ type: 'date', nullable: true })
+    lastLogin: Date | null;
+
     @ManyToMany('ClientEntity', 'users')
     clients: any[];
 
