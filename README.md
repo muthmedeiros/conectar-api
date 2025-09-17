@@ -18,6 +18,42 @@ Implementa autenticação com JWT, gerenciamento completo de usuários com CRUD,
 
 ---
 
+## 🏗️ Arquitetura
+
+A arquitetura do projeto foi cuidadosamente desenhada para ser **modular**, **fácil de manter** e **escalável**. Os principais pontos são:
+
+- **Modularização**: Cada domínio (ex: Auth, Users, Clients) está isolado em seu próprio módulo, facilitando a localização de bugs, a adição de novas funcionalidades e a manutenção do código.
+- **Testabilidade**: A separação clara entre camadas e o uso de injeção de dependências permite testes unitários e de integração robustos, com mocks e isolamento total.
+- **Inversão de Dependências**: Os módulos e serviços são desacoplados, utilizando interfaces e providers, o que facilita a troca de implementações e evita dependências rígidas.
+- **Componentes Compartilhados**: Pipes, guards, interceptors, middlewares, filtros de exceção e utilitários ficam em `src/common`, promovendo reuso e padronização.
+- **Configurações Centralizadas**: Todas as configurações sensíveis (banco, JWT, variáveis de ambiente) estão centralizadas em `src/common/config`.
+- **Health Check**: Endpoint dedicado para verificação de saúde da API, facilitando monitoramento e integração com ferramentas externas.
+
+Essa abordagem garante um código limpo, fácil de evoluir, com baixo acoplamento e alta coesão, além de facilitar a identificação e correção de bugs.
+
+---
+
+## 🌐 API Pública (Deploy)
+
+A API está disponível publicamente em produção via Render:
+
+👉 [https://conectar-api-vloa.onrender.com/api](https://conectar-api-vloa.onrender.com/api)
+
+---
+
+## ⚙️ CI/CD Integrado
+
+O projeto conta com **integração contínua e deploy contínuo (CI/CD)** via **GitHub Actions** e **Render**:
+
+- **Testes automáticos**: Todo push na branch `main` executa todos os testes unitários e e2e.
+- **Build automatizado**: O build é realizado em ambiente isolado, garantindo que apenas código válido seja deployado.
+- **Deploy automático**: Após sucesso nos testes e build, o deploy é disparado automaticamente para o Render.
+- **Secrets seguros**: Variáveis sensíveis (tokens, chaves) são gerenciadas via *Secrets* do GitHub.
+
+Workflow de CI/CD já está configurado em `.github/workflows/ci-cd-render.yml`.
+
+---
+
 ## ⚙️ Requisitos
 
 - Node.js **v20 ou superior**  

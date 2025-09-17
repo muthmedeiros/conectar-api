@@ -3,8 +3,8 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EncryptionUtil } from 'src/common/utils/encryption.util';
 import { Repository } from 'typeorm';
+import { EncryptionUtil } from '../../common/utils/encryption.util';
 import { User } from '../users/domain/user.model';
 import { UserEntity } from '../users/entities/user.entity';
 import { UserMapper } from '../users/mappers/user.mapper';

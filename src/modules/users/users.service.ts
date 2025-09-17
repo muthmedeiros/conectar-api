@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EncryptionUtil } from 'src/common/utils/encryption.util';
 import { Repository } from 'typeorm';
+import { EncryptionUtil } from '../../common/utils/encryption.util';
 import { CreateUserCommand } from './commands/create-user.command';
 import { UpdateUserCommand } from './commands/update-user.command';
 import { User } from './domain/user.model';
