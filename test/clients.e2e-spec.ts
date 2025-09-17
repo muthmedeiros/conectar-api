@@ -87,7 +87,6 @@ describe('Clients (e2e)', () => {
             corporateReason: 'Test Client Ltda',
             cnpj: '12.345.678/0001-90',
             name: 'Test Client',
-            tags: 'test,client',
             status: ClientStatus.ACTIVE,
             conectarPlus: false,
             adminUserId: adminUser.id,
@@ -129,7 +128,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'New Client Ltda',
                 cnpj: '98.765.432/0001-01',
                 name: 'New Client',
-                tags: 'new,test',
                 adminUserId: adminUser.id,
             };
 
@@ -144,7 +142,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'New Client Ltda',
                 cnpj: '98.765.432/0001-01',
                 name: 'New Client',
-                tags: ['new', 'test'],
                 status: ClientStatus.ACTIVE,
                 conectarPlus: false,
                 adminUserId: adminUser.id,
@@ -166,7 +163,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Manager Client Ltda',
                 cnpj: '98.765.432/0001-02',
                 name: 'Manager Client',
-                tags: 'manager,test',
                 adminUserId: adminUser.id,
             };
 
@@ -182,7 +178,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'User Client Ltda',
                 cnpj: '98.765.432/0001-03',
                 name: 'User Client',
-                tags: 'user,test',
                 adminUserId: adminUser.id,
             };
 
@@ -198,7 +193,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'No Auth Client Ltda',
                 cnpj: '98.765.432/0001-04',
                 name: 'No Auth Client',
-                tags: 'noauth,test',
                 adminUserId: adminUser.id,
             };
 
@@ -213,7 +207,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Invalid CNPJ Client Ltda',
                 cnpj: 'invalid-cnpj',
                 name: 'Invalid CNPJ Client',
-                tags: 'invalid,test',
                 adminUserId: adminUser.id,
             };
 
@@ -229,7 +222,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Duplicate CNPJ Client Ltda',
                 cnpj: '12.345.678/0001-90', // Same as existing client
                 name: 'Duplicate CNPJ Client',
-                tags: 'duplicate,test',
                 adminUserId: adminUser.id,
             };
 
@@ -245,7 +237,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Invalid Admin Client Ltda',
                 cnpj: '98.765.432/0001-05',
                 name: 'Invalid Admin Client',
-                tags: 'invalid,admin',
                 adminUserId: '550e8400-e29b-41d4-a716-446655440999',
             };
 
@@ -336,7 +327,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Second Client Ltda',
                 cnpj: '98.765.432/0001-90',
                 name: 'Second Client',
-                tags: 'second,test',
                 status: ClientStatus.ACTIVE,
                 conectarPlus: true,
                 adminUserId: adminUser.id,
@@ -389,7 +379,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Test Client Ltda',
                 cnpj: '12.345.678/0001-90',
                 name: 'Test Client',
-                tags: ['test', 'client'],
                 status: ClientStatus.ACTIVE,
                 conectarPlus: false,
             });
@@ -421,7 +410,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Unassigned Client Ltda',
                 cnpj: '11.111.111/0001-11',
                 name: 'Unassigned Client',
-                tags: 'unassigned',
                 status: ClientStatus.ACTIVE,
                 conectarPlus: false,
                 adminUserId: adminUser.id,
@@ -460,7 +448,6 @@ describe('Clients (e2e)', () => {
         it('should update client as admin', async () => {
             const updateClientDto: UpdateClientRequestDto = {
                 name: 'Updated Client Name',
-                tags: 'updated,tags',
                 status: ClientStatus.INACTIVE,
                 conectarPlus: true,
             };
@@ -473,7 +460,6 @@ describe('Clients (e2e)', () => {
 
             expect(response.body).toMatchObject({
                 name: 'Updated Client Name',
-                tags: ['updated', 'tags'],
                 status: ClientStatus.INACTIVE,
                 conectarPlus: true,
             });
@@ -633,7 +619,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Unassigned Client Ltda',
                 cnpj: '22.222.222/0002-22',
                 name: 'Unassigned Client',
-                tags: 'unassigned',
                 status: ClientStatus.ACTIVE,
                 conectarPlus: false,
                 adminUserId: adminUser.id,
@@ -681,7 +666,6 @@ describe('Clients (e2e)', () => {
                         corporateReason: 'Test Client Ltda',
                         cnpj,
                         name: 'Test Client',
-                        tags: 'test',
                         adminUserId: adminUser.id,
                     })
                     .expect(400);
@@ -706,7 +690,6 @@ describe('Clients (e2e)', () => {
                 corporateReason: 'Invalid Status Client Ltda',
                 cnpj: '33.333.333/0003-33',
                 name: 'Invalid Status Client',
-                tags: 'test',
                 status: 'INVALID_STATUS',
                 adminUserId: adminUser.id,
             };

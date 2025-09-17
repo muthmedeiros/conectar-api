@@ -1,5 +1,6 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import * as bcrypt from 'bcrypt';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { UserRole } from '../src/common/enums/user-role.enum';
@@ -24,11 +25,13 @@ describe('Profile e2e', () => {
 
     userRepository = moduleFixture.get(getRepositoryToken(UserEntity));
 
-    // Create a user
+
+    // Create a user with a real bcrypt hash for 'password123'
+    const passwordHash = await bcrypt.hash('password123', 12);
     user = userRepository.create({
       name: 'Profile User',
       email: 'profile@example.com',
-      passwordHash: '$2a$12$QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm', // bcrypt hash for 'password123'
+      passwordHash,
       role: UserRole.USER,
     });
     await userRepository.save(user);
